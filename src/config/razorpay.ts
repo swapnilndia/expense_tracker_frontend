@@ -184,7 +184,9 @@ export const checkoutHandler = async ({
       modal: {
         ondismiss: function () {
           alert("Transaction cancelled.");
-          window.location.href = `http://localhost:5173/payment-status-failed/${data.razorpay_order_id}`;
+          window.location.href = `${
+            import.meta.env.VITE_FRONTEND_URL
+          }/payment-status-failed/${data.razorpay_order_id}`;
           // Handle actions to take when the payment modal is closed or dismissed
         },
       },

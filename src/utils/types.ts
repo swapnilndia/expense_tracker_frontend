@@ -55,3 +55,24 @@ export type ExpenseDataType = {
   offset: number;
   count: number;
 };
+
+export type MonthlyExpenseListType =
+  | [
+      {
+        month: string;
+        total_amount: number;
+        transaction_count: number;
+      }
+    ]
+  | [];
+
+export type WeeklyExpenseListType =
+  | [
+      {
+        year: 2024;
+        week: 25;
+        total_amount: 738;
+        transaction_count: 6;
+      }
+    ]
+  | [];

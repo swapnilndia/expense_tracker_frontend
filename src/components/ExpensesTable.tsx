@@ -15,18 +15,27 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  SelectChangeEvent,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { AppDispatch } from "../redux/appStore";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { deleteExpenseAction } from "../redux/asyncAction/expenseAsyncAction";
+import {
+  deleteExpenseAction,
+  getExpenseListAction,
+  getMonthlyExpensesAction,
+  getWeeklyExpensesAction,
+} from "../redux/asyncAction/expenseAsyncAction";
 import { ExpenseDataType } from "../utils/types";
 import { SetNumberType } from "./HomePage";
 
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import ExpenseTableMonthly from "./ExpenseTableMonthly";
+import ExpenseTableWeekly from "./ExpenseTableWeekly";
 interface Column {
   id: "date" | "price" | "category" | "description" | "action";
   label: string;
@@ -70,6 +79,7 @@ const ExpensesTable = ({
   setRowsPerPage: SetNumberType;
 }) => {
   const dispatch: AppDispatch = useDispatch();
+  const [tableBasis, setTableBasis] = useState<string>("10"); // Ensure initial state matches an available value
   const navigate = useNavigate();
 
   const handleDownload = async () => {
@@ -95,9 +105,22 @@ const ExpensesTable = ({
   const handleEdit = (expenseId: number) => {
     navigate(`/editExpense/${expenseId}`);
   };
+  const handleSelectChange = (event: SelectChangeEvent<string>) => {
+    setTableBasis(event.target.value);
+  };
+
+  useEffect(() => {
+    if (tableBasis === "10") {
+      dispatch(getExpenseListAction({ page: 0, rowsPerPage: 10 }));
+    } else if (tableBasis === "20") {
+      dispatch(getWeeklyExpensesAction());
+    } else {
+      dispatch(getMonthlyExpensesAction());
+    }
+  }, [tableBasis]);
+
   return (
     <div>
-      {" "}
       <Box
         padding={1}
         sx={{
@@ -115,14 +138,12 @@ const ExpensesTable = ({
             labelId="demo-simple-select-helper-label"
             id="demo-simple-select-helper"
             label="View Expense"
-            defaultValue={10}
+            value={tableBasis} // Ensure the Select component value matches the state
+            onChange={handleSelectChange}
           >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={10}>Daily Basis</MenuItem>
-            <MenuItem value={20}>Weekly Basis</MenuItem>
-            <MenuItem value={30}>Monthly Basis</MenuItem>
+            <MenuItem value="10">Daily Basis</MenuItem>
+            <MenuItem value="20">Weekly Basis</MenuItem>
+            <MenuItem value="30">Monthly Basis</MenuItem>
           </Select>
         </FormControl>
         <Typography align="center" variant="h4">
@@ -132,79 +153,94 @@ const ExpensesTable = ({
           <FileDownloadIcon fontSize="large" />
         </IconButton>
       </Box>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{ minWidth: column.minWidth }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          {expenseList && expenseList?.listOfExpense?.length > 0 ? (
-            <TableBody>
-              {expenseList?.listOfExpense
-                // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((expense) => {
-                  return (
-                    <TableRow
-                      hover
-                      role="checkbox"
-                      tabIndex={-1}
-                      key={expense.id}
+      {tableBasis === "10" && (
+        <>
+          {" "}
+          <TableContainer sx={{ maxHeight: 440 }}>
+            <Table stickyHeader aria-label="sticky table">
+              <TableHead>
+                <TableRow>
+                  {columns.map((column) => (
+                    <TableCell
+                      key={column.id}
+                      align={column.align}
+                      style={{ minWidth: column.minWidth }}
                     >
-                      <TableCell align="left">
-                        {formattedDate(expense.createdAt)}
-                      </TableCell>
-                      <TableCell align="right">
-                        {formattedCurrency(expense.price)}
-                      </TableCell>
-                      <TableCell align="right">{expense.category}</TableCell>
-                      <TableCell align="right">{expense.description}</TableCell>
-                      <TableCell align="right">
-                        <Tooltip title="Delete">
-                          <IconButton onClick={() => handleDelete(expense.id)}>
-                            <DeleteIcon />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit">
-                          <IconButton onClick={() => handleEdit(expense.id)}>
-                            <EditIcon />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-            </TableBody>
-          ) : (
-            <TableBody>
-              <TableRow>
-                <TableCell colSpan={5}>
-                  <Typography align="center" variant="h5">
-                    Expense list is Empty
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          )}
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={expenseList?.count ?? 10}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+                      {column.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              {expenseList && expenseList?.listOfExpense?.length > 0 ? (
+                <TableBody>
+                  {expenseList?.listOfExpense
+                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((expense) => {
+                      return (
+                        <TableRow
+                          hover
+                          role="checkbox"
+                          tabIndex={-1}
+                          key={expense.id}
+                        >
+                          <TableCell align="left">
+                            {formattedDate(expense.createdAt)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {formattedCurrency(expense.price)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {expense.category}
+                          </TableCell>
+                          <TableCell align="right">
+                            {expense.description}
+                          </TableCell>
+                          <TableCell align="right">
+                            <Tooltip title="Delete">
+                              <IconButton
+                                onClick={() => handleDelete(expense.id)}
+                              >
+                                <DeleteIcon />
+                              </IconButton>
+                            </Tooltip>
+                            <Tooltip title="Edit">
+                              <IconButton
+                                onClick={() => handleEdit(expense.id)}
+                              >
+                                <EditIcon />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                </TableBody>
+              ) : (
+                <TableBody>
+                  <TableRow>
+                    <TableCell colSpan={5}>
+                      <Typography align="center" variant="h5">
+                        Expense list is Empty
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              )}
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[10, 25, 100]}
+            component="div"
+            count={expenseList?.count ?? 10}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </>
+      )}
+      {tableBasis === "20" && <ExpenseTableWeekly />}
+      {tableBasis === "30" && <ExpenseTableMonthly />}
     </div>
   );
 };

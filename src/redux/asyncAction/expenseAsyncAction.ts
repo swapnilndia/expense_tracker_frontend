@@ -9,6 +9,20 @@ export const getExpenseListAction = createAsyncThunk(
     return response;
   }
 );
+export const getWeeklyExpensesAction = createAsyncThunk(
+  "getWeeklyExpensesAction",
+  async () => {
+    const response = await ExpenseService.getWeeklyExpenseList();
+    return response.listOfExpense;
+  }
+);
+export const getMonthlyExpensesAction = createAsyncThunk(
+  "getMonthlyExpensesAction",
+  async () => {
+    const response = await ExpenseService.getMonthlyExpenseList();
+    return response.listOfExpense;
+  }
+);
 export const deleteExpenseAction = createAsyncThunk(
   "deleteExpenseAction",
   async (expenseId: number, thunkAPI) => {

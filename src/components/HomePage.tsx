@@ -2,12 +2,11 @@ import * as React from "react";
 import Paper from "@mui/material/Paper";
 
 import { Card } from "@mui/material";
-import { AppDispatch } from "../redux/appStore";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  getExpenseListAction,
-  // searchExpenseAction,
-} from "../redux/asyncAction/expenseAsyncAction";
+// import { AppDispatch } from "../redux/appStore";
+import { useSelector } from "react-redux";
+// import {
+//   getExpenseListAction,
+// } from "../redux/asyncAction/expenseAsyncAction";
 import { selectListOfExpense } from "../redux/reducers/expenseReducer";
 
 import ExpensesTable from "./ExpensesTable";
@@ -20,7 +19,7 @@ const defaultExpensePagination = JSON.parse(
 export type SetNumberType = React.Dispatch<React.SetStateAction<number>>;
 
 export default function HomePage() {
-  const dispatch: AppDispatch = useDispatch();
+  // const dispatch: AppDispatch = useDispatch();
   const expenseList = useSelector(selectListOfExpense);
   const [page, setPage] = React.useState<number>(defaultExpensePagination.page);
   const [rowsPerPage, setRowsPerPage] = React.useState<number>(
@@ -33,7 +32,7 @@ export default function HomePage() {
       JSON.stringify({ page, rowsPerPage })
     );
 
-    dispatch(getExpenseListAction({ page, rowsPerPage }));
+    // dispatch(getExpenseListAction({ page, rowsPerPage }));
   }, [page, rowsPerPage]);
   return (
     <Paper

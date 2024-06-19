@@ -42,6 +42,58 @@ class expenseService {
       console.error("Error fetching expense list:", error);
     }
   };
+  getWeeklyExpenseList = async () => {
+    try {
+      const token = JSON.parse(
+        localStorage.getItem("userData") || ""
+      ).access_token;
+
+      if (!token) {
+        throw new Error("No access token found");
+      }
+
+      const response: AxiosResponse = await apiHelper({
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/expenses-weekly`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Weekly Expenses fetched successfully");
+        return response.data;
+      }
+    } catch (error) {
+      toast.error("Error fetching expense list:");
+      console.error("Error fetching expense list:", error);
+    }
+  };
+  getMonthlyExpenseList = async () => {
+    try {
+      const token = JSON.parse(
+        localStorage.getItem("userData") || ""
+      ).access_token;
+
+      if (!token) {
+        throw new Error("No access token found");
+      }
+
+      const response: AxiosResponse = await apiHelper({
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/expenses-monthly`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Monthly Expenses fetched successfully");
+        return response.data;
+      }
+    } catch (error) {
+      toast.error("Error fetching expense list:");
+      console.error("Error fetching expense list:", error);
+    }
+  };
   getLeaderboard = async () => {
     try {
       const token = JSON.parse(
