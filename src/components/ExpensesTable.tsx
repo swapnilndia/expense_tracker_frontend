@@ -24,6 +24,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   deleteExpenseAction,
+  downloadExpensesAction,
   getExpenseListAction,
   getMonthlyExpensesAction,
   getWeeklyExpensesAction,
@@ -32,7 +33,6 @@ import { ExpenseDataType } from "../utils/types";
 import { SetNumberType } from "./HomePage";
 
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-import axios from "axios";
 import { useEffect, useState } from "react";
 import ExpenseTableMonthly from "./ExpenseTableMonthly";
 import ExpenseTableWeekly from "./ExpenseTableWeekly";
@@ -83,7 +83,11 @@ const ExpensesTable = ({
   const navigate = useNavigate();
 
   const handleDownload = async () => {
-    await axios.get(`${import.meta.env.VITE_API_URL}/download`);
+    const response = await dispatch(downloadExpensesAction());
+    console.log(response);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = response?.payload?.data?.downloadURL;
+    downloadLink.click();
   };
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,

@@ -28,8 +28,8 @@ const MenuIconButton = () => {
     navigate("/profile");
     handleClose();
   };
-  const settingPageHandler = () => {
-    navigate("/settings");
+  const downloadsPageHandler = () => {
+    navigate("/download-history");
     handleClose();
   };
   const LeaderboardPageHandler = () => {
@@ -76,9 +76,11 @@ const MenuIconButton = () => {
         onClose={handleClose}
       >
         <MenuItem onClick={profilePageHandler}>View Profile</MenuItem>
-        <MenuItem onClick={settingPageHandler}>Settings</MenuItem>
         {user && user.isPrimary && (
           <MenuItem onClick={LeaderboardPageHandler}>Leaderboard</MenuItem>
+        )}
+        {user && user.isPrimary && (
+          <MenuItem onClick={downloadsPageHandler}>Download History</MenuItem>
         )}
 
         <MenuItem onClick={logoutHandler}>Logout</MenuItem>

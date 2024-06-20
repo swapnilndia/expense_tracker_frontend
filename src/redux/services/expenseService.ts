@@ -120,6 +120,62 @@ class expenseService {
       console.error("Error fetching Leaderboard", error);
     }
   };
+
+  downloadExpense = async () => {
+    try {
+      const token = JSON.parse(
+        localStorage.getItem("userData") || ""
+      ).access_token;
+
+      if (!token) {
+        throw new Error("No access token found");
+      }
+
+      const response: AxiosResponse = await apiHelper({
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/download`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Expenses downloaded Successfully");
+        console.log(response);
+        return response;
+      }
+    } catch (error) {
+      toast.error("Error downloading expenses");
+      console.error("Error downloading Expenses", error);
+    }
+  };
+
+  getDownloadsList = async () => {
+    try {
+      const token = JSON.parse(
+        localStorage.getItem("userData") || ""
+      ).access_token;
+
+      if (!token) {
+        throw new Error("No access token found");
+      }
+
+      const response: AxiosResponse = await apiHelper({
+        method: "GET",
+        url: `${import.meta.env.VITE_API_URL}/downloads`,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (response.status === 200) {
+        toast.success("Download List fetched successfully");
+        return response.data.listOfDownload;
+      }
+    } catch (error) {
+      toast.error("Error fetching Download List ");
+      console.error("Error fetching Download List ", error);
+    }
+  };
+
   deleteExpense = async (expenseId: number) => {
     try {
       const token = JSON.parse(

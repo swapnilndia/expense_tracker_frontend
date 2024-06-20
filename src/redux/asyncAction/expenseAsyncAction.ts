@@ -32,6 +32,13 @@ export const deleteExpenseAction = createAsyncThunk(
     return response;
   }
 );
+export const downloadExpensesAction = createAsyncThunk(
+  "downloadExpensesAction",
+  async () => {
+    const response = await ExpenseService.downloadExpense();
+    return response;
+  }
+);
 export const addExpenseAction = createAsyncThunk(
   "addExpenseAction",
   async ({ price, category, description }: expenseData, thunkAPI) => {

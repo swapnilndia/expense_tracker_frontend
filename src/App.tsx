@@ -22,6 +22,7 @@ import SentMailVerifyEmail from "./components/SentMailVerifyEmail";
 import EmailVerified from "./components/EmailVerified";
 import SentMailForgotPassword from "./components/SentMailForgotPassword";
 import RedirectIfAuthenticated from "./components/RedirectIfAuthenticated";
+import Downloads from "./components/Downloads";
 
 const App = () => {
   const [darkMode, setDarkMode] = useState<boolean>(true);
@@ -38,7 +39,6 @@ const App = () => {
       <div>
         <MenuAppBar setDarkMode={setDarkMode} darkMode={darkMode} />
         <Routes>
-          // Public Routes
           <Route element={<RedirectIfAuthenticated />}>
             <Route path="/login" element={<LoginPage />}></Route>
             <Route path="/signup" element={<SignupPage />}></Route>
@@ -74,6 +74,7 @@ const App = () => {
               path="/sent-mail-verify"
               element={<SentMailVerifyEmail />}
             ></Route>
+            <Route path="/download-history" element={<Downloads />}></Route>
           </Route>
           <Route path="*" element={<Missing />}></Route>
         </Routes>
