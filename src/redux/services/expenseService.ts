@@ -140,8 +140,7 @@ class expenseService {
       });
       if (response.status === 200) {
         toast.success("Expenses downloaded Successfully");
-        console.log(response);
-        return response;
+        return response.data;
       }
     } catch (error) {
       toast.error("Error downloading expenses");

@@ -26,7 +26,7 @@ const PaymentFailed = () => {
           Transaction id: {razorpay_order_id}
         </Typography>
       </Grid>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3 }} margin="0px auto 0px auto">
         <Button variant="contained" color="primary">
           <Link to="/"> Go to Home page</Link>
         </Button>

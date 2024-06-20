@@ -11,21 +11,19 @@ import { formattedCurrency } from "../utils/helperFunctions";
 
 const ExpenseTableMonthly = () => {
   const monthlyExpenses = useSelector(selectMonthlyListOfExpense);
-  console.log(monthlyExpenses);
   return (
     <>
-      {monthlyExpenses && monthlyExpenses.length > 0 ? (
-        <TableContainer sx={{ maxHeight: 440 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">Year</TableCell>
-                <TableCell align="right">Month</TableCell>
-                <TableCell align="right">Total Amount</TableCell>
-                <TableCell align="right">Transactions Count</TableCell>
-              </TableRow>
-            </TableHead>
-
+      <TableContainer sx={{ maxHeight: 440 }}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Year</TableCell>
+              <TableCell align="right">Month</TableCell>
+              <TableCell align="right">Total Amount</TableCell>
+              <TableCell align="right">Transactions Count</TableCell>
+            </TableRow>
+          </TableHead>
+          {monthlyExpenses && monthlyExpenses.length > 0 ? (
             <TableBody>
               {monthlyExpenses.map((expense) => (
                 <TableRow
@@ -50,19 +48,19 @@ const ExpenseTableMonthly = () => {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
-        </TableContainer>
-      ) : (
-        <TableBody>
-          <TableRow>
-            <TableCell colSpan={5}>
-              <Typography align="center" variant="h5">
-                Expense list is Empty
-              </Typography>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      )}
+          ) : (
+            <TableBody>
+              <TableRow>
+                <TableCell colSpan={5}>
+                  <Typography align="center" variant="h5">
+                    Expense list is Empty
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          )}{" "}
+        </Table>
+      </TableContainer>
     </>
   );
 };

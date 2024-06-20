@@ -4,16 +4,16 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import BuyPremiumButton from "./BuyPremiumButton";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch } from "../redux/appStore";
 import { logoutAction } from "../redux/asyncAction/userAsyncAction";
 import { useNavigate } from "react-router-dom";
 import { IconButton } from "@mui/material";
-import useFetchUserDetails from "../hooks/useFetchUserDetails";
+import { selectDetailedUser } from "../redux/reducers/userReducer";
 
 const MenuIconButton = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { user } = useFetchUserDetails();
+  const user = useSelector(selectDetailedUser);
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {

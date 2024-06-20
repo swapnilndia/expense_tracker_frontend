@@ -13,11 +13,14 @@ import {
   WeeklyExpenseListType,
 } from "../../utils/types";
 
+type ExpenseViewEnum = "10" | "20" | "30";
+
 type initialStateType = {
   listOfExpense: ExpenseDataType | null;
   specificExpense: ExpenseObjectType | null;
   monthlyExpense: MonthlyExpenseListType | null;
   weeklyExpense: WeeklyExpenseListType | null;
+  expenseView: ExpenseViewEnum;
 };
 
 const initialState: initialStateType = {
@@ -25,12 +28,17 @@ const initialState: initialStateType = {
   specificExpense: null,
   monthlyExpense: null,
   weeklyExpense: null,
+  expenseView: "10",
 };
 
 const expenseSlice = createSlice({
   name: "expense",
   initialState,
-  reducers: {},
+  reducers: {
+    changeView: (state, action) => {
+      state.expenseView = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getExpenseListAction.fulfilled, (state, action) => {
       state.listOfExpense = action.payload;
@@ -50,6 +58,10 @@ const expenseSlice = createSlice({
   },
 });
 
+export const selectExpenseTableView = (state: {
+  expense: { expenseView: ExpenseViewEnum };
+}) => state.expense.expenseView;
+
 export const selectListOfExpense = (state: {
   expense: { listOfExpense: ExpenseDataType };
 }) => state.expense.listOfExpense;
@@ -65,4 +77,5 @@ export const selectWeeklyListOfExpense = (state: {
 export const selectSpecificExpense = (state: {
   expense: { specificExpense: ExpenseObjectType };
 }) => state.expense.specificExpense;
+export const { changeView } = expenseSlice.actions;
 export default expenseSlice.reducer;

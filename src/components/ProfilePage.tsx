@@ -2,7 +2,6 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import PaidIcon from "@mui/icons-material/Paid";
 import MoneyOffCsredIcon from "@mui/icons-material/MoneyOffCsred";
-import useFetchUserDetails from "../hooks/useFetchUserDetails";
 import {
   Button,
   Chip,
@@ -17,10 +16,12 @@ import {
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { UserService } from "../redux/services/userServices";
+import { useSelector } from "react-redux";
+import { selectDetailedUser } from "../redux/reducers/userReducer";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
-  const { user } = useFetchUserDetails();
+  const user = useSelector(selectDetailedUser);
   const handleVerify = async (email: string) => {
     const response = await UserService.verifyEmailInitialize({ email });
     if (response?.status === 200) {

@@ -35,7 +35,6 @@ export const loginAction = createAsyncThunk(
 
 export const getUserAction = createAsyncThunk("getUserAction", async () => {
   const response = await UserService.getUserDetails();
-  console.log(response);
   return response;
 });
 

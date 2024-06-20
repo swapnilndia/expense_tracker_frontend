@@ -12,15 +12,17 @@ import React, { useEffect } from "react";
 import useDebounce from "../hooks/useDebounce";
 import { useNavigate } from "react-router-dom";
 import { AppDispatch } from "../redux/appStore";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getExpenseListAction,
   searchExpenseAction,
 } from "../redux/asyncAction/expenseAsyncAction";
+import { selectExpenseTableView } from "../redux/reducers/expenseReducer";
 
 const HomepageSearchComponent = () => {
   const navigate = useNavigate();
   const dispatch: AppDispatch = useDispatch();
+  const tableIvew = useSelector(selectExpenseTableView);
   const [searchText, setSearchText] = React.useState<string>("");
   const debouncedSearchText = useDebounce(searchText, 500);
   const [categoryText, setCategoryText] = React.useState<string>("");
@@ -61,96 +63,105 @@ const HomepageSearchComponent = () => {
   }, [debouncedSearchText, debouncedCategoryText]);
 
   return (
-    <Grid
-      container
-      spacing={{ xs: 2, md: 3 }}
-      sx={{
-        display: "flex",
-        flexDirection: { xs: "column", md: "row" },
-        justifyContent: "space-between",
-        padding: "12px",
-      }}
-    >
-      <Grid
-        item
-        xs={12}
-        md={8}
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-        gap={2}
-      >
-        <TextField
-          value={searchText}
-          fullWidth
-          focused
-          autoFocus
-          onChange={handleSearchChange}
-          placeholder="Search by description"
-        ></TextField>
-        <FormControl variant="outlined" fullWidth>
-          <InputLabel id="category-select-label">Search By Category</InputLabel>
-          <Select
-            fullWidth
-            labelId="category-select-label"
-            label="Search By Category"
-            onChange={handleCategoryChange}
-            value={categoryText}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value="Housing (Rent/Mortgage)">
-              Housing (Rent/Mortgage)
-            </MenuItem>
-            <MenuItem value="Food and Groceries">Food and Groceries</MenuItem>
-            <MenuItem value="Utilities (Electricity, Water, Internet)">
-              Utilities (Electricity, Water, Internet)
-            </MenuItem>
-            <MenuItem value="Transportation (Fuel, Public Transit)">
-              Transportation (Fuel, Public Transit)
-            </MenuItem>
-            <MenuItem value="Healthcare (Insurance, Medical Bills)">
-              Healthcare (Insurance, Medical Bills)
-            </MenuItem>
-            <MenuItem value="Education (Tuition, Books)">
-              Education (Tuition, Books)
-            </MenuItem>
-            <MenuItem value="Entertainment (Movies, Subscriptions)">
-              Entertainment (Movies, Subscriptions)
-            </MenuItem>
-            <MenuItem value="Clothing">Clothing</MenuItem>
-            <MenuItem value="Personal Care (Haircuts, Beauty Products)">
-              Personal Care (Haircuts, Beauty Products)
-            </MenuItem>
-            <MenuItem value="Miscellaneous (Gifts, Donations, Others)">
-              Miscellaneous (Gifts, Donations, Others)
-            </MenuItem>
-          </Select>
-        </FormControl>
-        <Button variant="contained" onClick={handleReset}>
-          Reset
-        </Button>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        md={4}
-        sx={{
-          display: "flex",
-          justifyContent: "end",
-        }}
-      >
-        <Button
-          fullWidth
-          variant="contained"
-          onClick={() => navigate("/addExpense")}
+    <>
+      {" "}
+      {tableIvew === "10" && (
+        <Grid
+          container
+          spacing={{ xs: 2, md: 3 }}
+          sx={{
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
+            padding: "12px",
+          }}
         >
-          + Add New Expense
-        </Button>
-      </Grid>
-    </Grid>
+          <Grid
+            item
+            xs={12}
+            md={8}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+            gap={2}
+          >
+            <TextField
+              value={searchText}
+              fullWidth
+              focused
+              autoFocus
+              onChange={handleSearchChange}
+              placeholder="Search by description"
+            ></TextField>
+            <FormControl variant="outlined" fullWidth>
+              <InputLabel id="category-select-label">
+                Search By Category
+              </InputLabel>
+              <Select
+                fullWidth
+                labelId="category-select-label"
+                label="Search By Category"
+                onChange={handleCategoryChange}
+                value={categoryText}
+              >
+                <MenuItem value="">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="Housing (Rent/Mortgage)">
+                  Housing (Rent/Mortgage)
+                </MenuItem>
+                <MenuItem value="Food and Groceries">
+                  Food and Groceries
+                </MenuItem>
+                <MenuItem value="Utilities (Electricity, Water, Internet)">
+                  Utilities (Electricity, Water, Internet)
+                </MenuItem>
+                <MenuItem value="Transportation (Fuel, Public Transit)">
+                  Transportation (Fuel, Public Transit)
+                </MenuItem>
+                <MenuItem value="Healthcare (Insurance, Medical Bills)">
+                  Healthcare (Insurance, Medical Bills)
+                </MenuItem>
+                <MenuItem value="Education (Tuition, Books)">
+                  Education (Tuition, Books)
+                </MenuItem>
+                <MenuItem value="Entertainment (Movies, Subscriptions)">
+                  Entertainment (Movies, Subscriptions)
+                </MenuItem>
+                <MenuItem value="Clothing">Clothing</MenuItem>
+                <MenuItem value="Personal Care (Haircuts, Beauty Products)">
+                  Personal Care (Haircuts, Beauty Products)
+                </MenuItem>
+                <MenuItem value="Miscellaneous (Gifts, Donations, Others)">
+                  Miscellaneous (Gifts, Donations, Others)
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <Button variant="contained" onClick={handleReset}>
+              Reset
+            </Button>
+          </Grid>
+          <Grid
+            item
+            xs={12}
+            md={4}
+            sx={{
+              display: "flex",
+              justifyContent: "end",
+            }}
+          >
+            <Button
+              fullWidth
+              variant="contained"
+              onClick={() => navigate("/addExpense")}
+            >
+              + Add New Expense
+            </Button>
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
 };
 

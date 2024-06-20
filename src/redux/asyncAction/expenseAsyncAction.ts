@@ -32,8 +32,8 @@ export const deleteExpenseAction = createAsyncThunk(
     return response;
   }
 );
-export const downloadExpensesAction = createAsyncThunk(
-  "downloadExpensesAction",
+export const downloadExpenseAction = createAsyncThunk(
+  "downloadExpenseAction",
   async () => {
     const response = await ExpenseService.downloadExpense();
     return response;

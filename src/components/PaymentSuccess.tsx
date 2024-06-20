@@ -5,9 +5,13 @@ import { Box } from "@mui/system";
 import { useEffect } from "react";
 import { apiHelper } from "../utils/apiHelperFunctions";
 import { AxiosResponse } from "axios";
+import { AppDispatch } from "../redux/appStore";
+import { useDispatch } from "react-redux";
+import { getUserAction } from "../redux/asyncAction/userAsyncAction";
 
 const PaymentSuccess = () => {
   const { razorpay_order_id } = useParams();
+  const dispatch: AppDispatch = useDispatch();
 
   const updateTransaction = async (razorpayOrderId: string) => {
     try {
@@ -29,7 +33,9 @@ const PaymentSuccess = () => {
           razorpay_order_id: razorpayOrderId,
         }),
       });
-      console.log(response);
+      if (response) {
+        dispatch(getUserAction());
+      }
     } catch (error) {
       console.log(error);
     }
@@ -60,7 +66,7 @@ const PaymentSuccess = () => {
           Transaction id: {razorpay_order_id}
         </Typography>
       </Grid>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3 }} margin="0px auto 0px auto">
         <Button variant="contained" color="primary">
           <Link to="/"> Go to Home page</Link>
         </Button>

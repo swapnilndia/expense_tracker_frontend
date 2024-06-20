@@ -11,7 +11,10 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { loginData } from "../utils/types";
 import { loginSchema } from "../utils/schema";
-import { loginAction } from "../redux/asyncAction/userAsyncAction";
+import {
+  getUserAction,
+  loginAction,
+} from "../redux/asyncAction/userAsyncAction";
 import { AppDispatch } from "../redux/appStore";
 import { useDispatch } from "react-redux";
 
@@ -35,6 +38,7 @@ const LoginPage = () => {
     const responseType = response?.type.split("/")[1];
     if (responseType === "fulfilled") {
       navigate("/");
+      dispatch(getUserAction());
     }
   };
   return (

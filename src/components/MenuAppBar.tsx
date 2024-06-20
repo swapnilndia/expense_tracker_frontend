@@ -7,10 +7,15 @@ import LightModeIcon from "@mui/icons-material/LightMode";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { useNavigate } from "react-router-dom";
-import { selectLoggedInStatus } from "../redux/reducers/userReducer";
-import { useSelector } from "react-redux";
+import {
+  selectDetailedUser,
+  selectLoggedInStatus,
+} from "../redux/reducers/userReducer";
+import { useDispatch, useSelector } from "react-redux";
 import MenuIconButton from "./MenuIconButton";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { AppDispatch } from "../redux/appStore";
+import { getUserAction } from "../redux/asyncAction/userAsyncAction";
 
 type SetDarkModeType = Dispatch<SetStateAction<boolean>>;
 export default function MenuAppBar({
@@ -20,9 +25,16 @@ export default function MenuAppBar({
   darkMode: boolean;
   setDarkMode: SetDarkModeType;
 }) {
+  const dispatch: AppDispatch = useDispatch();
   const userLoggedInStatus = useSelector(selectLoggedInStatus);
+  const user = useSelector(selectDetailedUser);
 
   const navigate = useNavigate();
+  useEffect(() => {
+    if (user === null) {
+      dispatch(getUserAction());
+    }
+  }, []);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -50,7 +62,7 @@ export default function MenuAppBar({
             <IconButton
               size="large"
               edge="start"
-              color="inherit"
+              color="warning"
               aria-label="menu"
               sx={{ mr: 2 }}
               onClick={() => setDarkMode(false)}

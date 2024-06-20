@@ -1,29 +1,24 @@
-import { Button, Chip, Typography } from "@mui/material";
-import useFetchUserDetails from "../hooks/useFetchUserDetails";
+import { Button, Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import PaidIcon from "@mui/icons-material/Paid";
+import { useSelector } from "react-redux";
+import { selectDetailedUser } from "../redux/reducers/userReducer";
 const BuyPremiumButton = () => {
-  const { user, loading } = useFetchUserDetails();
+  const user = useSelector(selectDetailedUser);
   const navigate = useNavigate();
 
   return (
     <div>
-      {loading ? (
-        <Typography>Loading...</Typography>
+      {user?.isPrimary ? (
+        <Chip icon={<PaidIcon />} label="Premium" color="success" />
       ) : (
-        <>
-          {user?.isPrimary ? (
-            <Chip icon={<PaidIcon />} label="Premium" color="success" />
-          ) : (
-            <Button
-              variant="contained"
-              color="warning"
-              onClick={() => navigate("/premium")}
-            >
-              Buy Premium
-            </Button>
-          )}
-        </>
+        <Button
+          variant="contained"
+          color="warning"
+          onClick={() => navigate("/premium")}
+        >
+          Buy Premium
+        </Button>
       )}
     </div>
   );

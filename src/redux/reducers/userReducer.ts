@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginAction, logoutAction } from "../asyncAction/userAsyncAction";
+import {
+  getUserAction,
+  loginAction,
+  logoutAction,
+} from "../asyncAction/userAsyncAction";
 
 type userStateType = {
   access_token: string;
@@ -7,7 +11,16 @@ type userStateType = {
   refresh_token: string;
   userId: number;
 };
+
+type userDetailedInfoType = {
+  id: number;
+  name: string;
+  email: string;
+  isVerified: boolean;
+  isPrimary: boolean;
+};
 type initialStateType = {
+  userDetailedInfo: userDetailedInfoType | null;
   userDetails: userStateType | null;
   isLoggedIn: boolean;
 };
@@ -19,6 +32,7 @@ const userData: userStateType | null = (() => {
 })();
 
 const initialState: initialStateType = {
+  userDetailedInfo: null,
   userDetails: userData,
   isLoggedIn: userData ? true : false,
 };
@@ -29,6 +43,7 @@ const userSlice: any = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loginAction.fulfilled, (state, action) => {
+      console.log(userData);
       localStorage.setItem("userData", JSON.stringify(action.payload));
       state.userDetails = action.payload;
       state.isLoggedIn = true;
@@ -39,8 +54,13 @@ const userSlice: any = createSlice({
       localStorage.removeItem("userData");
       window.location.href = "/login";
     });
+    builder.addCase(getUserAction.fulfilled, (state, action) => {
+      state.userDetailedInfo = action.payload;
+    });
   },
 });
+export const selectDetailedUser = (state: { user: initialStateType }) =>
+  state.user.userDetailedInfo;
 
 export const selectUser = (state: { user: initialStateType }) =>
   state.user.userDetails;

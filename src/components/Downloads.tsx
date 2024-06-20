@@ -1,4 +1,3 @@
-import * as React from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -54,7 +53,7 @@ export default function Downloads() {
     >
       <Box padding={2}>
         <Typography align="center" variant="h4">
-          Leaderboard
+          Download History
         </Typography>
       </Box>
       {loading ? (
@@ -106,13 +105,15 @@ export default function Downloads() {
                   })}
               </TableBody>
             ) : (
-              <TableRow>
-                <TableCell colSpan={5}>
-                  <Typography align="center" variant="h5">
-                    Expense list is Empty
-                  </Typography>
-                </TableCell>
-              </TableRow>
+              <TableBody>
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    <Typography align="center" variant="h5">
+                      Expense list is Empty
+                    </Typography>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
             )}
           </Table>
         </TableContainer>

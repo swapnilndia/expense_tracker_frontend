@@ -20,11 +20,11 @@ import {
   Typography,
 } from "@mui/material";
 import { AppDispatch } from "../redux/appStore";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import {
   deleteExpenseAction,
-  downloadExpensesAction,
+  downloadExpenseAction,
   getExpenseListAction,
   getMonthlyExpensesAction,
   getWeeklyExpensesAction,
@@ -36,6 +36,8 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { useEffect, useState } from "react";
 import ExpenseTableMonthly from "./ExpenseTableMonthly";
 import ExpenseTableWeekly from "./ExpenseTableWeekly";
+import { selectDetailedUser } from "../redux/reducers/userReducer";
+import { changeView } from "../redux/reducers/expenseReducer";
 interface Column {
   id: "date" | "price" | "category" | "description" | "action";
   label: string;
@@ -79,16 +81,17 @@ const ExpensesTable = ({
   setRowsPerPage: SetNumberType;
 }) => {
   const dispatch: AppDispatch = useDispatch();
+  const user = useSelector(selectDetailedUser);
   const [tableBasis, setTableBasis] = useState<string>("10"); // Ensure initial state matches an available value
   const navigate = useNavigate();
 
   const handleDownload = async () => {
-    const response = await dispatch(downloadExpensesAction());
-    console.log(response);
+    const response = await dispatch(downloadExpenseAction());
     const downloadLink = document.createElement("a");
-    downloadLink.href = response?.payload?.data?.downloadURL;
+    downloadLink.href = response?.payload?.downloadURL;
     downloadLink.click();
   };
+
   const handleChangePage = (
     _: React.MouseEvent<HTMLButtonElement, MouseEvent> | null,
     newPage: number
@@ -115,10 +118,13 @@ const ExpensesTable = ({
 
   useEffect(() => {
     if (tableBasis === "10") {
+      dispatch(changeView("10"));
       dispatch(getExpenseListAction({ page: 0, rowsPerPage: 10 }));
     } else if (tableBasis === "20") {
+      dispatch(changeView("20"));
       dispatch(getWeeklyExpensesAction());
     } else {
+      dispatch(changeView("30"));
       dispatch(getMonthlyExpensesAction());
     }
   }, [tableBasis]);
@@ -130,32 +136,36 @@ const ExpensesTable = ({
         sx={{
           display: "flex",
           flexDirection: "row",
-          justifyContent: "space-between",
+          justifyContent: user && user.isPrimary ? "space-between" : "center",
         }}
       >
-        <FormControl>
-          <InputLabel id="demo-simple-select-helper-label">
-            View Expense
-          </InputLabel>
-          <Select
-            fullWidth
-            labelId="demo-simple-select-helper-label"
-            id="demo-simple-select-helper"
-            label="View Expense"
-            value={tableBasis} // Ensure the Select component value matches the state
-            onChange={handleSelectChange}
-          >
-            <MenuItem value="10">Daily Basis</MenuItem>
-            <MenuItem value="20">Weekly Basis</MenuItem>
-            <MenuItem value="30">Monthly Basis</MenuItem>
-          </Select>
-        </FormControl>
+        {user?.isPrimary && (
+          <FormControl>
+            <InputLabel id="demo-simple-select-helper-label">
+              View Expense
+            </InputLabel>
+            <Select
+              fullWidth
+              labelId="demo-simple-select-helper-label"
+              id="demo-simple-select-helper"
+              label="View Expense"
+              value={tableBasis} // Ensure the Select component value matches the state
+              onChange={handleSelectChange}
+            >
+              <MenuItem value="10">Daily Basis</MenuItem>
+              <MenuItem value="20">Weekly Basis</MenuItem>
+              <MenuItem value="30">Monthly Basis</MenuItem>
+            </Select>
+          </FormControl>
+        )}
         <Typography align="center" variant="h4">
           Expense List
         </Typography>{" "}
-        <IconButton onClick={handleDownload}>
-          <FileDownloadIcon fontSize="large" />
-        </IconButton>
+        {user?.isPrimary && (
+          <IconButton onClick={handleDownload}>
+            <FileDownloadIcon fontSize="large" />
+          </IconButton>
+        )}
       </Box>
       {tableBasis === "10" && (
         <>
