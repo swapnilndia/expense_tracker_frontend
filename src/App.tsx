@@ -44,7 +44,7 @@ const App = () => {
             <Route path="/signup" element={<SignupPage />}></Route>
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/verify-email" element={<EmailVerified />} />
+
             <Route
               path="/sent-mail-forgot-password"
               element={<SentMailForgotPassword />}
@@ -77,6 +77,7 @@ const App = () => {
             <Route path="/download-history" element={<Downloads />}></Route>
           </Route>
           <Route path="*" element={<Missing />}></Route>
+          <Route path="/verify-email" element={<EmailVerified />} />
         </Routes>
       </div>
     </ThemeProvider>

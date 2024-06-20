@@ -1,45 +1,41 @@
-import { Card, CardContent } from "@mui/material";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CircularProgress,
+  Typography,
+} from "@mui/material";
 import { AppDispatch } from "../redux/appStore";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { verifyUserFinalizeAction } from "../redux/asyncAction/userAsyncAction";
-// import { resetPasswordType } from "../utils/types";
-// import { useDispatch } from "react-redux";
-// import { resetPasswordAction } from "../redux/asyncAction/userAsyncAction";
-// import { AppDispatch } from "../redux/appStore";
-// import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  getUserAction,
+  verifyUserFinalizeAction,
+} from "../redux/asyncAction/userAsyncAction";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const EmailVerified = () => {
   const dispatch: AppDispatch = useDispatch();
-  const navigate = useNavigate();
+  const [verificationStatus, setVerificationStatus] = useState(false);
   const queryParams = new URLSearchParams(location.search);
   const tokenValue = queryParams.get("token");
 
-  //   const resetPassword = async (data: resetPasswordType) => {
-  //     const { password } = data;
-  //     const response = await dispatch(
-  //       resetPasswordAction({ token: tokenValue ?? "", password })
-  //     );
-  //     const responseType = response?.type.split("/")[1];
-  //     if (responseType === "fulfilled") {
-  //       navigate("/login");
-  //     }
-  //   };
-
-  const resetPassword = async (tokenValue: string) => {
+  const verifyEmail = async (tokenValue: string) => {
     const response = await dispatch(
       verifyUserFinalizeAction({ token: tokenValue ?? "" })
     );
     const responseType = response?.type.split("/")[1];
     if (responseType === "fulfilled") {
-      navigate("/login");
+      setVerificationStatus(true);
+      dispatch(getUserAction());
     }
   };
 
   useEffect(() => {
     if (tokenValue) {
-      resetPassword(tokenValue);
+      verifyEmail(tokenValue);
     }
   }, [tokenValue]);
 
@@ -47,11 +43,45 @@ const EmailVerified = () => {
     <Card
       sx={{
         maxWidth: 750,
-        margin: "20px auto auto auto",
+        margin: "50px auto 20px auto",
         border: "1px solid black",
       }}
     >
-      <CardContent></CardContent>{" "}
+      <CardContent sx={{ width: "100%" }}>
+        {!verificationStatus ? (
+          <Box
+            padding={4}
+            display="flex"
+            flexDirection="column"
+            gap={6}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CircularProgress size={100} />
+            <Typography>Fetching info</Typography>
+            <Button variant="contained" color="primary">
+              <Link to="/"> Go to Home page</Link>
+            </Button>
+          </Box>
+        ) : (
+          <Box
+            padding={4}
+            display="flex"
+            flexDirection="column"
+            gap={6}
+            justifyContent="center"
+            alignItems="center"
+          >
+            <CheckCircleOutlineIcon
+              sx={{ width: 100, height: "auto" }}
+            ></CheckCircleOutlineIcon>
+            <Typography>Verified</Typography>
+            <Button variant="contained" color="primary">
+              <Link to="/"> Go to Home page</Link>
+            </Button>
+          </Box>
+        )}
+      </CardContent>{" "}
     </Card>
   );
 };
